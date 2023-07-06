@@ -47,7 +47,7 @@ public:
     {
         name = "Unknown";
         holding = (Weapon)((rand() % 4 + 1) * 10);
-        hp = rand() % 200 + 100;
+        hp = rand() % (150 - 50 + 1) + 50;
     }
     Enemy(string sb, int sn, Weapon sth) : name(sb), hp(sn), holding(sth) {}
     virtual ~Enemy() {}
@@ -59,7 +59,23 @@ public:
         target.hp -= val;
         return val;
     }
+    int heal()
+    {
+    	int val = rand() % 25 + 1;
+    	if (hp + val > 100) val = 100 - hp;
+    	hp += val;
+    	return val;
+	}
 };
+
+void clear_screen()
+{
+	#ifdef _WIN32
+	system("cls");
+	#else
+	cout << "\33[2J";
+	#endif
+}
 
 void mysleep(int ms)
 {
@@ -97,7 +113,7 @@ void typecode(string code)
     }
 }
 
-void start()
+void start(bool pvp_mode)
 {
     cout << ">";
     mysleep(1000);
@@ -105,6 +121,9 @@ void start()
     mysleep(2000);
     cout << "Welcome to Developers' Game" << endl;
     mysleep(1000);
+    if (pvp_mode) cout << "Mode:PvP" << endl;
+	else cout << "Mode:Normal" << endl;
+	mysleep(1000);
     cout << "Loading";
     for (int i = 1; i <= 3; i++)
     {
@@ -153,13 +172,15 @@ select:
                 say(make_sayable("Type you.heal(); to heal!"));
                 typecode("you.heal();");
                 cout << endl;
-                healval = rand() % 25 + 1;
-                player.hp += healval;
+                healval = player.heal();
                 say(make_sayable(string("You healed ") + i2s(healval) + string(" point of HP!")));
                 break;
             case 3:
-                cout << "You runned away." << endl;
+                say(make_sayable("You runned away."));
                 return true;
+            default:
+            	say(make_sayable("Invalid choice, please choose again."));
+            	goto select;
         }
         say(make_sayable("It's your enemy's round!"));
         say(make_sayable(string("Enemy's HP:") + i2s(e.hp)));
@@ -177,6 +198,58 @@ select:
         int val = e.hurt(player);
         say(make_sayable(string("Your enemy deals ") + i2s(val) + string(" points of damage!")));
     }
+}
+
+void pmove(Enemy &me, Enemy &target)
+{
+	say("Select your move(1 for attack, 2 for heal):");
+	int c;
+	cin >> c;
+	int hurtval;
+	int healval;
+select:
+	switch (c)
+	{
+		case 1:
+			hurtval = me.hurt(target);
+            say(make_sayable("Type you.weapon.attack(target); to attack!"));
+            typecode("you.weapon.attack(target);");
+            cout << endl;
+            say(make_sayable(string("You deal ") + i2s(hurtval) + string(" point of damage!")));
+            break;
+        case 2:
+        	say(make_sayable("Type you.heal(); to heal!"));
+            typecode("you.heal();");
+            cout << endl;
+            healval = me.heal();
+            say(make_sayable(string("You healed ") + i2s(healval) + string(" point of HP!")));
+            break;
+        default:
+        	say(make_sayable("Invalid choice, please choose again."));
+            goto select;
+	}
+}
+
+
+bool pvp(Enemy &p1, Enemy &p2)
+{
+	while (true)
+	{
+		if (p1.check())
+		{
+			say(make_sayable("Player 1 died!"));
+			say(make_sayable("Player 2 win!"));
+		}
+		say(make_sayable(string("Player 1's HP:") + i2s(p1.hp)));
+		pmove(p1, p2);
+		if (p2.check())
+		{
+			say(make_sayable("Player 2 died!"));
+			say(make_sayable("Player 1 win!"));
+		}
+		say(make_sayable(string("Player 2's HP:") + i2s(p2.hp)));
+		pmove(p2, p1);
+	}
 }
 
 bool main_level(Enemy &player, int n)
@@ -199,12 +272,12 @@ choose:
     cin >> n;
     if (n == 0)
     {
-        system("cls");
+        clear_screen();
         return alternative_level(player);
     }
     else if (n >= 1 && n <= 9)
     {
-        system("cls");
+        clear_screen();
         return main_level(player, n);
     }
     else
@@ -214,20 +287,42 @@ choose:
     }
 }
 
-int main()
+int main(int argc, char **argv)
 {
+	srand(time(0));
+	if (argc != 1)
+	{
+		start(true);
+		mysleep(1000);
+		clear_screen();
+		string p1name;
+		say("Enter Player 1's name:");
+		getline(cin, p1name);
+		string p2name;
+		say("Enter Player 2's name:");
+		getline(cin, p2name);
+		Enemy p1(p1name, 100, (Weapon)1);
+		Enemy p2(p2name, 100, (Weapon)1);
+		say("Enter damage that players' weapon deal:");
+		int n;
+		cin >> n;
+		p1.holding = (Weapon)n;
+		p2.holding = (Weapon)n;
+		clear_screen();
+		pvp(p1, p2);
+		return 0;
+	}
 game:
-    srand(time(0));
     // The biggest enemy that you are going to beat is yourself.
     Enemy player("", 100, (Weapon)10);
-    start();
+    start(false);
     mysleep(1000);
-    system("cls");
+    clear_screen();
     string name;
     say("Enter your name:");
-    cin >> name;
+    getline(cin, name);
     player.name = name;
-    system("cls");
+    clear_screen();
     output_level();
     if (!choose_level(player)) goto game;
     return 0;
