@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include <conio.h>
+#include "../include/conio.h"
 #include <cstdlib>
 #include <cstdio>
 #include <algorithm>
