@@ -310,8 +310,8 @@ int main(int argc, char **argv)
 		string p2name;
 		say("Enter Player 2's name:");
 		getline(cin, p2name);
-		Enemy p1(p1name, 100, (Weapon)1);
-		Enemy p2(p2name, 100, (Weapon)1);
+		Enemy p1(p1name, 100, (Weapon)5);
+		Enemy p2(p2name, 100, (Weapon)5);
 wchoose:
 		say("Enter damage that players' weapon deal:");
 		int n;
@@ -329,7 +329,7 @@ wchoose:
 	}
 game:
     // The biggest enemy that you are going to beat is yourself.
-    Enemy player("", 100, (Weapon)10);
+    Enemy player("", 100, (Weapon)5);
     start(false);
     mysleep(1000);
     clear_screen();
