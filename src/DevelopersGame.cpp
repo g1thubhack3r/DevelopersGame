@@ -22,6 +22,7 @@ enum class Weapon
     SNIPER_RIFLE = 80,
     MACHINEGUN = 90,
     LASER_GUN = 1000,
+    FAT_MAN = 10000,
     MASS_POINT = 0x3f3f3f
 };
 
