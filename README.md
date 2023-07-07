@@ -6,3 +6,4 @@ This game is currently in alpha, only parts of game is available.
 2. Run `make` in cloned repository's directory
 ## ToDo:
 - Complete main levels
+- Multiplayer mode
