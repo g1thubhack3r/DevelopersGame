@@ -11,16 +11,16 @@ using namespace std;
 
 enum class Weapon
 {
-    FIST = 1, 
+    FIST = 5, 
     WOODEN_SWORD = 10,
     STONE_SWORD = 20,
     IRON_SWORD = 30,
     DIAMOND_SWORD = 40,
     HANDGUN = 50,
-    SHOTGUN = 75,
-    ASSUALT_RIFLE = 100,
-    SNIPER_RIFLE = 175,
-    MACHINEGUN = 200,
+    SHOTGUN = 60,
+    ASSUALT_RIFLE = 75,
+    SNIPER_RIFLE = 80,
+    MACHINEGUN = 90,
     LASER_GUN = 1000,
     MASS_POINT = 0x3f3f3f
 };
@@ -117,7 +117,8 @@ void start(bool pvp_mode)
 {
     cout << ">";
     mysleep(1000);
-    say(make_sayable("DevelopersGame"));
+    if (pvp_mode) say(make_sayable("DevelopersGame PvP"));
+	else say(make_sayable("DevelopersGame")); 
     mysleep(2000);
     cout << "Welcome to Developers' Game" << endl;
     mysleep(1000);
@@ -287,6 +288,13 @@ choose:
     }
 }
 
+bool weapon_exist(int n)
+{
+	if (n >= 100) return false;
+	if (n != 5 && n != 75 && n / 10 != 0) return false;
+	return true;
+}
+
 int main(int argc, char **argv)
 {
 	srand(time(0));
@@ -303,9 +311,15 @@ int main(int argc, char **argv)
 		getline(cin, p2name);
 		Enemy p1(p1name, 100, (Weapon)1);
 		Enemy p2(p2name, 100, (Weapon)1);
+wchoose:
 		say("Enter damage that players' weapon deal:");
 		int n;
 		cin >> n;
+		if (!weapon_exist(n))
+		{
+			say(make_sayable("Incorrect weapon, please choose again."));
+			goto wchoose;
+		}
 		p1.holding = (Weapon)n;
 		p2.holding = (Weapon)n;
 		clear_screen();
