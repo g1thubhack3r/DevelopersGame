@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdio>
+#include <cctype>
 #include <sstream>
 #include "../include/conio.h"
 #include <cstdlib>
@@ -114,6 +116,49 @@ void typecode(string code)
     }
 }
 
+int input_level()
+{
+lchoose:
+	say("Select level(0 for alternative level, other for main level):");
+	char c = getch();
+	cout << c;
+	cout << endl;
+	if (c >= '0' && c <= '9')
+	{
+		return c - '0';
+	}
+	say(make_sayable("Incorrect level, please choose again."));
+	goto lchoose;
+}
+
+// true for normal, false for PvP
+int decide(string prompt, bool mode)
+{
+dochoose:
+	say(prompt);
+	char c = getch();
+	cout << c;
+	if (mode && c == '3')
+	{
+		cout << endl;
+		return 3;
+	}
+	if (c == '1')
+	{
+		cout << endl;
+		return 1;
+	}
+	if (c == '2')
+	{
+		cout << 2;
+		cout << endl;
+		return 2;
+	}
+	cout << endl;
+	say(make_sayable("Invalid choice, please choose again."));
+	goto dochoose;
+}
+
 void start(bool pvp_mode)
 {
     cout << ">";
@@ -144,6 +189,7 @@ void output_level()
     cout << endl;
 }
 
+
 bool combat(Enemy &player, Enemy &e)
 {
     while (true)
@@ -151,14 +197,16 @@ bool combat(Enemy &player, Enemy &e)
         if (player.check())
         {
             say(make_sayable("You died!"));
+            player.hp = 100;
+            player.holding = Weapon::FIST;
+            mysleep(2000);
             return false;
         }
         say(make_sayable("It's your round!"));
         say(make_sayable(string("Your HP:") + i2s(player.hp)));
 select:
-        say("Select your move(1 for attack, 2 for heal, 3 for run):");
         int c;
-        cin >> c;
+        c = decide("Select your move(1 for attack, 2 for heal, 3 for run):", true);
         int hurtval;
         int healval;
         switch (c)
@@ -178,7 +226,10 @@ select:
                 say(make_sayable(string("You healed ") + i2s(healval) + string(" point of HP!")));
                 break;
             case 3:
+            	say(make_sayable("Type you.heal(); to heal!"));
+            	typecode("you.run();")
                 say(make_sayable("You runned away."));
+                mysleep(2000);
                 return true;
             default:
             	say(make_sayable("Invalid choice, please choose again."));
@@ -195,6 +246,7 @@ select:
                 player.holding = e.holding;
                 say(make_sayable("You equipped it because it deals more damage."));
             }
+            mysleep(2000);
             return true;
         }
         int val = e.hurt(player);
@@ -204,12 +256,11 @@ select:
 
 void pmove(Enemy &me, Enemy &target)
 {
-	say("Select your move(1 for attack, 2 for heal):");
+select:
 	int c;
-	cin >> c;
+	c = decide("Select your move(1 for attack, 2 for heal):", false);
 	int hurtval;
 	int healval;
-select:
 	switch (c)
 	{
 		case 1:
@@ -241,6 +292,8 @@ bool pvp(Enemy &p1, Enemy &p2)
 		{
 			say(make_sayable("Player 1 died!"));
 			say(make_sayable("Player 2 win!"));
+			mysleep(2000);
+			return false;
 		}
 		say(make_sayable(string("Player 1's HP:") + i2s(p1.hp)));
 		pmove(p1, p2);
@@ -248,6 +301,8 @@ bool pvp(Enemy &p1, Enemy &p2)
 		{
 			say(make_sayable("Player 2 died!"));
 			say(make_sayable("Player 1 win!"));
+			mysleep(2000);
+			return true;
 		}
 		say(make_sayable(string("Player 2's HP:") + i2s(p2.hp)));
 		pmove(p2, p1);
@@ -268,10 +323,7 @@ bool alternative_level(Enemy &player)
 
 bool choose_level(Enemy &player)
 {
-choose:
-    int n;
-    say("Select level(0 for alternative level, other for main level):");
-    cin >> n;
+    int n = input_level();
     if (n == 0)
     {
         clear_screen();
@@ -282,18 +334,16 @@ choose:
         clear_screen();
         return main_level(player, n);
     }
-    else
-    {
-        say(make_sayable("Incorrect level, please choose again."));
-        goto choose;
-    }
 }
 
 bool weapon_exist(int n)
 {
-	if (n >= 100) return false;
-	if (n != 5 && n != 75 && n / 10 != 0) return false;
-	return true;
+	vector<int> weapons{5, 10, 20, 30, 40};
+	for (int i = 0; i < weapons.size(); i++)
+	{
+		if (weapons[i] == n) return true;
+	}
+	return false;
 }
 
 int main(int argc, char **argv)
@@ -310,8 +360,8 @@ int main(int argc, char **argv)
 		string p2name;
 		say("Enter Player 2's name:");
 		getline(cin, p2name);
-		Enemy p1(p1name, 100, (Weapon)5);
-		Enemy p2(p2name, 100, (Weapon)5);
+		Enemy p1(p1name, 100, Weapon::FIST);
+		Enemy p2(p2name, 100, Weapon::FIST);
 wchoose:
 		say("Enter damage that players' weapon deal:");
 		int n;
@@ -325,11 +375,11 @@ wchoose:
 		p2.holding = (Weapon)n;
 		clear_screen();
 		pvp(p1, p2);
+		goto wchoose;
 		return 0;
 	}
-game:
-    // The biggest enemy that you are going to beat is yourself.
-    Enemy player("", 100, (Weapon)5);
+	// The biggest enemy that you are going to beat is yourself.
+    Enemy player("", 100, Weapon::FIST);
     start(false);
     mysleep(1000);
     clear_screen();
@@ -337,8 +387,10 @@ game:
     say("Enter your name:");
     getline(cin, name);
     player.name = name;
+game:
     clear_screen();
     output_level();
-    if (!choose_level(player)) goto game;
+    choose_level(player);
+    goto game;
     return 0;
 }
