@@ -48,7 +48,7 @@ public:
     {
         name = "Unknown";
         holding = (Weapon)((rand() % 4 + 1) * 10);
-        hp = rand() % (150 - 50 + 1) + 50;
+        hp = rand() % (150 - 100 + 1) + 100;
     }
     Enemy(string sb, int sn, Weapon sth) : name(sb), hp(sn), holding(sth) {}
     virtual ~Enemy() {}
