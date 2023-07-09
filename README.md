@@ -1,6 +1,7 @@
 # Developers' Game
 A mini-game made for developers.  
 This game is currently in alpha, only parts of game is available.  
+For Multiplayer mode, please view [this](https://githubfast.com/g1thubhack3r/DevelopersGameMultiplayer) repository.  
 ## How to complie by myself?
 1. Clone the repository
 2. Run `make` in cloned repository's directory
