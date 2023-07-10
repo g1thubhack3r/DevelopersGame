@@ -227,7 +227,7 @@ select:
                 break;
             case 3:
             	say(make_sayable("Type you.heal(); to heal!"));
-            	typecode("you.run();")
+            	typecode("you.run();");
                 say(make_sayable("You runned away."));
                 mysleep(2000);
                 return true;
