@@ -5,6 +5,7 @@
 #include "../include/conio.h"
 #include <cstdlib>
 #include <cstdio>
+#include <vector>
 #include <algorithm>
 #include <thread>
 #include <chrono>
