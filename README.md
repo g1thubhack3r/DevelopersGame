@@ -11,3 +11,4 @@ For Multiplayer mode, please view [this](https://github.com/g1thubhack3r/Develop
 - Write level system
 - Finish max HP system
 - Write skill system(probably not)
+- Write critical hit system
