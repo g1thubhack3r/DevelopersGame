@@ -11,4 +11,9 @@ DevelopersGame: DevelopersGame.cpp
 
 install:
 	cd bin
-	mv DevelopersGame /usr/bin/DevelopersGame
+	cp DevelopersGame /usr/bin/DevelopersGame
+	cd ../include
+	cp conio.h /usr/include/conio.h
+
+clean:
+	rm -rf bin
