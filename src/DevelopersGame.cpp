@@ -263,6 +263,12 @@ select:
                 player.holding = e.holding;
                 say(make_sayable("You equipped it because it deals more damage."));
             }
+			say(make_sayable(string("It dropped armor that defenses ") + i2s((int)e.wearing) + string(" percent of damage!")));
+            if ((int)player.wearing < (int)e.wearing)
+            {
+            	player.wearing = e.wearing;
+            	say(make_sayable("You equipped it because it defenses more damage."));
+			}
             mysleep(2000);
             return true;
         }
