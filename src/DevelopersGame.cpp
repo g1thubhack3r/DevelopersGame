@@ -60,7 +60,7 @@ public:
     int hp;
     Weapon holding;
     Armor wearing;
-    int maxhp = 100; // not implemented yet 
+    int maxhp; // not implemented yet 
     Enemy()
     {
         name = "Unknown";
@@ -68,7 +68,7 @@ public:
         wearing = (Armor)((rand() % 6) * 10);
         hp = rand() % (150 - 100 + 1) + 100;
     }
-    Enemy(string sb, int sn, Weapon sthh, Armor sthw) : name(sb), hp(sn), holding(sthh), wearing(sthw) {}
+    Enemy(string sb, int sn, Weapon sthh, Armor sthw) : name(sb), hp(sn), holding(sthh), wearing(sthw), maxhp(100) {}
     virtual ~Enemy() {}
     bool check() { return hp <= 0; }
     string describe() { return name + string(" HP:") + i2s(hp) + string(" Attack Stength:") + i2s((int)holding) + string(" Defense percent:") + i2s((int)wearing); }
@@ -196,8 +196,9 @@ void start(bool pvp_mode)
     cout << endl;
 }
 
-void output_level()
+void output_level(int n)
 {
+	say(make_sayable(string("Seed:") + i2s(n)));
     for (int i = 1; i <= 9; i++)
     {
         say(string("[") + i2s(i) + string("]") + string("-"));
@@ -432,11 +433,11 @@ wchoose:
     int n;
     say("Enter a seed(-1 for random):");
     cin >> n;
-    if (n == -1) srand(time(0));
-    else srand(n);
+    if (n == -1) n = (int)time(0);
+	srand(n);
 game:
     clear_screen();
-    output_level();
+    output_level(n);
     choose_level(player);
     goto game;
     return 0;
