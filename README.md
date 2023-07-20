@@ -6,6 +6,8 @@ For Multiplayer mode, please view [this](https://github.com/g1thubhack3r/Develop
 1. Clone the repository
 2. Run `make` in cloned repository's directory
 ## ToDo:
+- Complete rewrite of weapons(enum class to struct)
+- mod support
 - Complete main levels(2D map)
 - Multiplayer mode (intend to use Python because of it can cross-platform)
 - Write level system
