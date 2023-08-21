@@ -1,5 +1,6 @@
 CC := g++
 CFLAGS := -std=c++11
+PREFIX ?= /usr/local
 
 all: DevelopersGame
 
@@ -9,8 +10,8 @@ DevelopersGame: src/DevelopersGame.cpp
 	mv DevelopersGame bin/DevelopersGame
 
 install:
-	cp bin/DevelopersGame /usr/bin/DevelopersGame
-	cp include/conio.h /usr/include/conio.h
+	cp bin/DevelopersGame $(PREFIX)/bin/DevelopersGame
+	cp include/conio.h $(PREFIX)/include/conio.h
 
 clean:
 	rm -rf bin
