@@ -3,7 +3,7 @@ A mini SRPG game made for developers.
 This game is currently in alpha, only parts of game is available.  
 For Multiplayer mode, please view [this](https://githubfast.com/g1thubhack3r/DevelopersGameMultiplayer) repository.  
 ## License?
-AGPLv3.0+
+GNU AGPLv3.0+
 ### Why AGPL?
 I think that open source game should not be commerical and people should not be addicated to the game.
 So I changed the license of this game to AGPL(the strongest copyleft license).
