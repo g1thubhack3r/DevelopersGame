@@ -13,6 +13,7 @@ So I changed the license of this game to AGPL(the strongest copyleft license).
 ## ToDo:
 - Complete rewrite of weapons(enum class to struct)
 - Visual fighting system
+- Color support
 - mod support
 - Complete main levels(2D map)
 - Multiplayer mode (intend to use Python because of it can cross-platform)
